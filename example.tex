@@ -1,0 +1,114 @@
+\documentclass{article}
+\usepackage{sessiontype}
+
+\begin{document}
+
+\section{Honda-Vasconcelos-Kubo}
+
+\usesessiontype{HVK}
+\begin{align*}
+  P \grmeq & \request akP                 & \text{session request}\\
+    \grmor & \accept akP                  & \text{session acceptance}\\
+    \grmor & \send keP                    & \text{data sending}\\
+    \grmor & \recv kxP                    & \text{data reception}\\
+    \grmor & \select klP                  & \text{label selection}\\
+    \grmor & \branch klP                  & \text{label branching}\\
+    \grmor & \hosend k{k'}P               & \text{channel sending}\\
+    \grmor & \horecv k{k'}P               & \text{channel reception}\\
+    \grmor & \cond ePQ                    & \text{conditional branch}\\
+    \grmor & \parcomp PQ                  & \text{parallel composition}\\
+    \grmor & \inact                       & \text{inaction}\\
+    \grmor & \restrict uP                 & \text{name/channel hiding}\\
+    \grmor & \recur DP                    & \text{recursion}\\
+    \grmor & \vars X{\VEC e}{\VEC k}      & \text{process variables}\\
+  D \grmeq & \declare X{\VEC x}{\VEC k}P  & \text{declaration for recursion}\\
+\end{align*}
+
+\begin{align*}
+  T \grmeq & \sendType{\VEC S}\alpha  & \text{output}\\
+    \grmor & \recvType{\VEC S}\alpha  & \text{input}\\
+    \grmor & \selectType{l}{\alpha}   & \text{selection}\\
+    \grmor & \branchType{l}\alpha     & \text{branching}\\
+    \grmor & \hosendType{\alpha}\beta & \text{channel output}\\
+    \grmor & \horecvType{\alpha}\beta & \text{channel input}\\
+    \grmor & \recurType{t}{\alpha} \grmor \varType t
+                                      & \text{recursion}\\
+    \grmor & \finishType              & \text{inaction}\\
+    \grmor & \bottomType              & \text{bottom}\\
+\end{align*}
+
+\section{Vasconcelos-Yoshida}
+
+\usesessiontype{YV}
+\begin{align*}
+  P \grmeq & \request akP                 & \text{session request}\\
+    \grmor & \accept akP                  & \text{session acceptance}\\
+    \grmor & \send keP                    & \text{data sending}\\
+    \grmor & \recv kxP                    & \text{data reception}\\
+    \grmor & \select klP                  & \text{label selection}\\
+    \grmor & \branch klP                  & \text{label branching}\\
+    \grmor & \hosend k{k'}P               & \text{channel sending}\\
+    \grmor & \horecv k{k'}P               & \text{channel reception}\\
+    \grmor & \cond ePQ                    & \text{conditional branch}\\
+    \grmor & \parcomp PQ                  & \text{parallel composition}\\
+    \grmor & \inact                       & \text{inaction}\\
+    \grmor & \restrict uP                 & \text{name/channel hiding}\\
+    \grmor & \recur DP                    & \text{recursion}\\
+    \grmor & \vars X{\VEC e}{\VEC k}      & \text{process variables}\\
+  e \grmeq & c                            & \text{constant}\\
+    \grmor & e + e' \grmor e - e' \grmor e \times e' \grmor \notk(e) \grmor \dots
+                                          & \text{operators}\\
+  D \grmeq & \declare X{\VEC x}{\VEC k}P  & \text{declaration for recursion}\\
+\end{align*}
+
+\begin{align*}
+  T \grmeq & \sendType{\VEC S}\alpha  & \text{output}\\
+    \grmor & \recvType{\VEC S}\alpha  & \text{input}\\
+    \grmor & \selectType{l}{\alpha}   & \text{selection}\\
+    \grmor & \branchType{l}\alpha     & \text{branching}\\
+    \grmor & \hosendType{\alpha}\beta & \text{channel output}\\
+    \grmor & \horecvType{\alpha}\beta & \text{channel input}\\
+    \grmor & \recurType{t}{\alpha} \grmor \varType t
+                                      & \text{recursion}\\
+    \grmor & \finishType              & \text{inaction}\\
+    \grmor & \bottomType              & \text{bottom}\\
+\end{align*}
+
+\section{Honda-Yoshida-Carbone}
+
+\usesessiontype{HYC}
+\begin{align*}
+  P \grmeq & \request asP                   & \text{multicast session request}\\
+    \grmor & \accept asP                    & \text{session acceptance}\\
+    \grmor & \send seP                      & \text{value sending}\\
+    \grmor & \recv sxP                      & \text{value reception}\\
+    \grmor & \hosend s{\VEC s}P             & \text{session delegation}\\
+    \grmor & \horecv s{\VEC s}P             & \text{session delegation}\\
+    \grmor & \select slP                    & \text{label selection}\\
+    \grmor & \branch slP                    & \text{label branching}\\
+    \grmor & \cond ePQ                      & \text{conditional branch}\\
+    \grmor & \parcomp PQ                    & \text{parallel composition}\\
+    \grmor & \inact                         & \text{inaction}\\
+    \grmor & \restrict nP                   & \text{hiding}\\
+    \grmor & \recur DP                      & \text{recursion}\\
+    \grmor & \vars X{\VEC e}{\VEC s}        & \text{process call}\\
+    \grmor & s: \VEC{h}                     & \text{message queue}\\
+  e \grmeq & v \grmor e\ \andk\ e' \grmor \notk\ e\ \dots
+                                            & \text{expressions}\\
+  v \grmeq & a \grmor \truek \grmor \falsek & \text{values}\\
+  h \grmeq & l \grmor \VEC{v} \grmor \VEC{s}& \text{messages-in-transit}\\
+  D \grmeq & \declare X{\VEC x}{\VEC s}P    & \text{declaration for recursion}\\
+\end{align*}
+
+\begin{align*}
+  \text{End-point}\ T
+    \grmeq & \sendType[k] UT   & \text{output}\\
+    \grmor & \recvType[k] UT   & \text{input}\\
+    \grmor & \selectType[k] lT & \text{selection}\\
+    \grmor & \branchType[k] lT & \text{branching}\\
+    \grmor & \recurType tT \grmor \varType t
+                               & \text{recursion}\\
+    \grmor & \finishType       & \text{inaction}\\
+\end{align*}
+
+\end{document}

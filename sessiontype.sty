@@ -1,0 +1,252 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{sessiontype}[16/01/2014 1.0.0 Session Type typesetting macros]
+
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{ifthen}
+\RequirePackage{xspace}
+
+\ProcessOptions\relax % ------------------------------------------------------
+
+\newcommand{\grmeq}{\ensuremath{\; ::= \;}}
+\newcommand{\grmor}{\ensuremath{\; \mid \;}}
+\newcommand{\usesessiontype}[1]{\makeatletter\renewcommand{\st@ver}[0]{#1}\makeatother}
+
+% Misc -----------------------------------------------------------------------
+\newcommand{\st@ver}[0]{HVK} % Default version to use
+
+% Continuation. Usage: \st@ifcont{;}{P} --> ; P (normal)
+%                      \st@ifcont{.}{P} --> .P  (nospace)
+%                      \st@ifcont{;}{}  -->     (no continuation)
+\newcommand{\st@ifcont}[2]{\ifthenelse{\equal{\detokenize{#2}}{}}
+                                      {}
+                                      {\ifthenelse{\equal{#1}{.}}
+                                                  {\ensuremath{#1#2}}
+                                                  {\ensuremath{#1\,#2}}}}
+\newcommand{\setof}[1]{\{#1\}}
+\newcommand{\VEC}[0]{\tilde}
+\newcommand{\participant}[1]{\ensuremath{\mathtt{#1}}}
+
+
+% Keywords -------------------------------------------------------------------
+\newcommand{\keyword}[1]{\textsf{\upshape\small#1}\xspace}
+\newcommand{\defk    }{\keyword{def}}
+\newcommand{\ink     }{\keyword{in}}
+\newcommand{\andk    }{\keyword{and}}
+\newcommand{\ork     }{\keyword{or}}
+\newcommand{\truek   }{\keyword{true}}
+\newcommand{\falsek  }{\keyword{false}}
+\newcommand{\acceptk }{\keyword{accept}}
+\newcommand{\requestk}{\keyword{request}}
+\newcommand{\ifk     }{\keyword{if}}
+\newcommand{\thenk   }{\keyword{then}}
+\newcommand{\elsek   }{\keyword{else}}
+\newcommand{\throwk  }{\keyword{throw}}
+\newcommand{\catchk  }{\keyword{catch}}
+\newcommand{\notk    }{\keyword{not}}
+\newcommand{\inactk  }{\keyword{inact}}
+
+
+% ----------------------------------------------------------------------------
+% Macros for syntax and types of three flavours of session types [HVK/YV/HYC]
+% ----------------------------------------------------------------------------
+
+
+% HVK ---- ESOP'98 ---- Honda-Vasconcelos-Kubo -------------------------------
+\newcommand{\sessproc@request@HVK }[2]{\ensuremath{\requestk\,#1(#2)}}
+\newcommand{\sessproc@accept@HVK  }[2]{\ensuremath{\acceptk\,#1(#2)}}
+\newcommand{\sessproc@send@HVK    }[2]{\ensuremath{#1![#2]}}
+\newcommand{\sessproc@recv@HVK    }[2]{\ensuremath{#1?(#2)}}
+\newcommand{\sessproc@select@HVK  }[2]{\ensuremath{#1 \lhd #2}}
+\newcommand{\sessproc@branch@HVK  }[3]{\ensuremath{#1 \rhd \setof{#2_i\colon\,#3_i}_{i\in\setof{1..n}}}}
+\newcommand{\sessproc@hosend@HVK  }[2]{\ensuremath{\throwk\,#1[#2]}}
+\newcommand{\sessproc@horecv@HVK  }[2]{\ensuremath{\catchk\,#1(#2)}}
+\newcommand{\sessproc@cond@HVK    }[3]{\ensuremath{\ifk\,#1\,\thenk\,#2\,\elsek\,#3}}
+\newcommand{\sessproc@parcomp@HVK }[2]{\ensuremath{#1 \mid #2}}
+\newcommand{\sessproc@inact@HVK   }[0]{\ensuremath{\inactk}}
+\newcommand{\sessproc@restrict@HVK}[1]{\ensuremath{({\boldsymbol\nu}\,#1)}}
+\newcommand{\sessproc@recur@HVK   }[2]{\ensuremath{\defk\,#1\,\ink\,#2}}
+\newcommand{\sessproc@vars@HVK    }[3]{\ensuremath{#1[#2#3]}}
+\newcommand{\sessproc@declare@HVK }[4]{\ensuremath{\setof{#1_i(#2_i#3_i)\,=\,#4_i}_{i\in\setof{1..n}}}}
+
+\newcommand{\syntax@initcont@HVK }[0]{\ \mathtt{in}} % Continuation after session init
+\newcommand{\syntax@asyncont@HVK }[0]{;}                          % Continuation after asyn
+\newcommand{\syntax@synccont@HVK }[0]{\ \mathtt{in}} % Continuation after sync
+
+\newcommand{\type@send@HVK  }[1]{\ensuremath{\downarrow\![#1]}}
+\newcommand{\type@recv@HVK  }[1]{\ensuremath{\uparrow\![#1]}}
+\newcommand{\type@select@HVK}[2]{\ensuremath{\oplus\setof{#1_i:\,#2_i}_{i\in\setof{1..n}}}}
+\newcommand{\type@branch@HVK}[2]{\ensuremath{\&\setof{#1_i:\,#2_i}_{i\in\setof{1..n}}}}
+\newcommand{\type@hosend@HVK}[1]{\type@send{#1}}
+\newcommand{\type@horecv@HVK}[1]{\type@recv{#1}}
+\newcommand{\type@recur@HVK }[2]{\ensuremath{\mu\,\type@var{#1}.#2}}
+\newcommand{\type@var@HVK   }[1]{\ensuremath{\mathbf{t}}}
+\newcommand{\type@finish@HVK}[0]{\ensuremath{\keyword{1}}}
+\newcommand{\type@bottom@HVK}[0]{\ensuremath{\perp}}
+
+
+% YV ---- SecReT'06 ---- Yoshida-Vasconcelos ---------------------------------
+\newcommand{\sessproc@request@YV }[2]{\sessproc@request@HVK{#1}{#2}}
+\newcommand{\sessproc@accept@YV  }[2]{\sessproc@accept@HVK{#1}{#2}}
+\newcommand{\sessproc@send@YV    }[2]{\sessproc@send@HVK{#1}{#2}}
+\newcommand{\sessproc@recv@YV    }[2]{\sessproc@recv@HVK{#1}{#2}}
+\newcommand{\sessproc@select@YV  }[2]{\sessproc@select@HVK{#1}{#2}}
+\newcommand{\sessproc@branch@YV  }[3]{\sessproc@branch@HVK{#1}{#2}{#3}}
+\newcommand{\sessproc@hosend@YV  }[2]{\sessproc@hosend@HVK{#1}{#2}}
+\newcommand{\sessproc@horecv@YV  }[2]{\sessproc@horecv@HVK{#1}{#2}}
+\newcommand{\sessproc@cond@YV    }[3]{\sessproc@cond@HVK{#1}{#2}{#3}}
+\newcommand{\sessproc@parcomp@YV }[2]{\sessproc@parcomp@HVK{#1}{#2}}
+\newcommand{\sessproc@inact@YV   }[0]{\sessproc@inact@HVK}
+\newcommand{\sessproc@restrict@YV}[1]{\sessproc@restrict@HVK{#1}}
+\newcommand{\sessproc@recur@YV   }[2]{\sessproc@recur@HVK{#1}{#2}}
+\newcommand{\sessproc@vars@YV    }[3]{\sessproc@vars@HVK{#1}{#2}{#3}}
+\newcommand{\sessproc@declare@YV }[4]{\sessproc@declare@HVK{#1}{#2}{#3}{#4}}
+
+\newcommand{\syntax@initcont@YV}[0]{\syntax@initcont@HVK} % Continuation after session init
+\newcommand{\syntax@asyncont@YV}[0]{\syntax@asyncont@HVK} % Continuation after asyn
+\newcommand{\syntax@synccont@YV}[0]{\syntax@synccont@HVK} % Continuation after sync
+
+\newcommand{\type@send@YV  }[1]{\ensuremath{![#1]}}
+\newcommand{\type@recv@YV  }[1]{\ensuremath{?[#1]}}
+\newcommand{\type@select@YV}[2]{\ensuremath{\oplus\setof{#1_i:\,#2_i}_{i\in\setof{1..n}}}}
+\newcommand{\type@branch@YV}[2]{\ensuremath{\&\setof{#1_i:\,#2_i}_{i\in\setof{1..n}}}}
+\newcommand{\type@hosend@YV}[1]{\type@send{#1}}
+\newcommand{\type@horecv@YV}[1]{\type@recv{#1}}
+\newcommand{\type@recur@YV }[2]{\ensuremath{\mu\,\type@var{#1}.#2}}
+\newcommand{\type@var@YV   }[1]{\ensuremath{\mathbf{t}}}
+\newcommand{\type@finish@YV}[0]{\ensuremath{\keyword{end}}}
+\newcommand{\type@bottom@YV}[0]{\ensuremath{\perp}}
+
+
+% HYC ---- POPL'08 ---- Honda-Yoshida-Carbone --------------------------------
+\newcommand{\sessproc@request@HYC }[2]{\ensuremath{\overline{#1}}{\mbox{\scriptsize [\participant{2..n}]}}\ensuremath{(#2)}}
+\newcommand{\sessproc@accept@HYC  }[2]{\ensuremath{#1}{\mbox{\scriptsize [\participant{p}]}}\ensuremath{(#2)}}
+\newcommand{\sessproc@send@HYC    }[2]{\ensuremath{#1!\langle #2\rangle}}
+\newcommand{\sessproc@recv@HYC    }[2]{\ensuremath{#1?(#2)}}
+\newcommand{\sessproc@select@HYC  }[2]{\ensuremath{#1 \lhd #2}}
+\newcommand{\sessproc@branch@HYC  }[3]{\ensuremath{#1 \rhd \setof{#2_i\colon\,#3_i}_{i\in I}}}
+\newcommand{\sessproc@hosend@HYC  }[2]{\ensuremath{#1!\langle\!\!\langle#2\rangle\!\!\rangle}}
+\newcommand{\sessproc@horecv@HYC  }[2]{\ensuremath{#1?(\!\!(#2)\!\!)}}
+\newcommand{\sessproc@cond@HYC    }[3]{\ensuremath{\ifk\,#1\,\thenk\,#2\,\elsek\,#3}}
+\newcommand{\sessproc@parcomp@HYC }[2]{\ensuremath{#1 \mid #2}}
+\newcommand{\sessproc@inact@HYC   }[0]{\ensuremath{\keyword{0}}}
+\newcommand{\sessproc@restrict@HYC}[1]{\ensuremath{({\boldsymbol\nu}\,#1)}}
+\newcommand{\sessproc@recur@HYC   }[2]{\ensuremath{\defk\,#1\,\ink\,#2}}
+\newcommand{\sessproc@vars@HYC    }[3]{\ensuremath{#1\langle#2#3\rangle}}
+\newcommand{\sessproc@declare@HYC }[4]{\ensuremath{\setof{#1_i(#2_i#3_i)\,=\,#4_i}_{i \in I}}}
+
+\newcommand{\syntax@initcont@HYC}[0]{.} % Continuation after session init
+\newcommand{\syntax@asyncont@HYC}[0]{;} % Continuation after async
+\newcommand{\syntax@synccont@HYC}[0]{;} % Continuation after sync
+
+\newcommand{\type@send@HYC  }[1]{\ensuremath{!\langle#1\rangle}}
+\newcommand{\type@recv@HYC  }[1]{\ensuremath{?\langle#1\rangle}}
+\newcommand{\type@select@HYC}[2]{\ensuremath{\oplus\setof{#1_i\colon#2_i}_{i\in\setof{1..n}}}}
+\newcommand{\type@branch@HYC}[2]{\ensuremath{\&\setof{#1_i\colon#2_i}_{i\in\setof{1..n}}}}
+\newcommand{\type@recur@HYC }[2]{\ensuremath{\mu\,\type@var{#1}.#2}}
+\newcommand{\type@var@HYC   }[1]{\ensuremath{\mathbf{t}}}
+\newcommand{\type@finish@HYC}[0]{\ensuremath{\keyword{end}}}
+
+
+% Version picking macros -----------------------------------------------------
+
+\newcommand{\sessproc@request }[2]{\relax\csname sessproc@request@\st@ver\endcsname{#1}{#2}}
+\newcommand{\sessproc@accept  }[2]{\relax\csname sessproc@accept@\st@ver\endcsname{#1}{#2}}
+\newcommand{\sessproc@send    }[2]{\relax\csname sessproc@send@\st@ver\endcsname{#1}{#2}}
+\newcommand{\sessproc@recv    }[2]{\relax\csname sessproc@recv@\st@ver\endcsname{#1}{#2}}
+\newcommand{\sessproc@select  }[2]{\relax\csname sessproc@select@\st@ver\endcsname{#1}{#2}}
+\newcommand{\sessproc@branch  }[3]{\relax\csname sessproc@branch@\st@ver\endcsname{#1}{#2}{#3}}
+\newcommand{\sessproc@hosend  }[2]{\relax\csname sessproc@hosend@\st@ver\endcsname{#1}{#2}}
+\newcommand{\sessproc@horecv  }[2]{\relax\csname sessproc@horecv@\st@ver\endcsname{#1}{#2}}
+\newcommand{\sessproc@cond    }[3]{\relax\csname sessproc@cond@\st@ver\endcsname{#1}{#2}{#3}}
+\newcommand{\sessproc@parcomp }[2]{\relax\csname sessproc@parcomp@\st@ver\endcsname{#1}{#2}}
+\newcommand{\sessproc@inact   }[0]{\relax\csname sessproc@inact@\st@ver\endcsname}
+\newcommand{\sessproc@restrict}[1]{\relax\csname sessproc@restrict@\st@ver\endcsname{#1}}
+\newcommand{\sessproc@recur   }[2]{\relax\csname sessproc@recur@\st@ver\endcsname{#1}{#2}}
+\newcommand{\sessproc@vars    }[3]{\relax\csname sessproc@vars@\st@ver\endcsname{#1}{#2}{#3}}
+\newcommand{\sessproc@declare }[4]{\relax\csname sessproc@declare@\st@ver\endcsname{#1}{#2}{#3}{#4}}
+
+\newcommand{\syntax@initcont}[0]{\csname syntax@initcont@\st@ver\endcsname} % Init-continuation
+\newcommand{\syntax@asyncont}[0]{\csname syntax@asyncont@\st@ver\endcsname} % Asyn-continuation
+\newcommand{\syntax@synccont}[0]{\csname syntax@synccont@\st@ver\endcsname} % Sync-continuation
+
+\newcommand{\type@send  }[1]{\csname type@send@\st@ver\endcsname{#1}}
+\newcommand{\type@recv  }[1]{\csname type@recv@\st@ver\endcsname{#1}}
+\newcommand{\type@select}[2]{\csname type@select@\st@ver\endcsname{#1}{#2}}
+\newcommand{\type@branch}[2]{\csname type@branch@\st@ver\endcsname{#1}{#2}}
+\newcommand{\type@hosend}[1]{\csname type@hosend@\st@ver\endcsname{#1}}
+\newcommand{\type@horecv}[1]{\csname type@horecv@\st@ver\endcsname{#1}}
+\newcommand{\type@recur }[2]{\csname type@recur@\st@ver\endcsname{#1}{#2}}
+\newcommand{\type@var   }[1]{\csname type@var@\st@ver\endcsname{#1}}
+\newcommand{\type@finish}[0]{\csname type@finish@\st@ver\endcsname}
+\newcommand{\type@bottom}[0]{\csname type@bottom@\st@ver\endcsname}
+
+% Continuation
+\newcommand{\st@icont}[1]{\st@ifcont{\syntax@initcont}{#1}} % If there are continuation, show it (init)
+\newcommand{\st@acont}[1]{\st@ifcont{\syntax@asyncont}{#1}} % If there are continuation, show it (asyn)
+\newcommand{\st@scont}[1]{\st@ifcont{\syntax@synccont}{#1}} % If there are continuation, show it (sync)
+\newcommand{\st@tcont}[1]{\st@ifcont{;}{#1}} % If there are continuation, show it (type)
+
+
+% Syntax ---------------------------------------------------------------------
+
+\newcommand{\request }[3]{\sessproc@request{#1}{#2}\st@icont{#3}}
+\newcommand{\accept  }[3]{\sessproc@accept{#1}{#2} \st@icont{#3}}
+\newcommand{\send    }[3]{\sessproc@send{#1}{#2}   \st@acont{#3}}
+\newcommand{\recv    }[3]{\sessproc@recv{#1}{#2}   \st@scont{#3}}
+\newcommand{\select  }[3]{\sessproc@select{#1}{#2} \st@acont{#3}}
+\newcommand{\branch  }[3]{\sessproc@branch{#1}{#2}{#3}}          
+\newcommand{\hosend  }[3]{\sessproc@hosend{#1}{#2} \st@acont{#3}}
+\newcommand{\horecv  }[3]{\sessproc@horecv{#1}{#2} \st@scont{#3}}
+\newcommand{\cond    }[3]{\sessproc@cond{#1}{#2}{#3}}            
+\newcommand{\parcomp }[2]{\sessproc@parcomp{#1}{#2}}             
+\newcommand{\inact   }[0]{\sessproc@inact}                       
+\newcommand{\restrict}[2]{\sessproc@restrict{#1}(#2)}            
+\newcommand{\recur   }[2]{\sessproc@recur{#1}{#2}}               
+\newcommand{\vars    }[3]{\sessproc@vars{#1}{#2}{#3}}            
+\newcommand{\declare }[4]{\sessproc@declare{#1}{#2}{#3}{#4}}     
+
+% Type -----------------------------------------------------------------------
+
+\newcommand{\sendType  }[3][]{{#1\relax}\type@send{#2}\st@tcont{#3}}
+\newcommand{\recvType  }[3][]{{#1\relax}\type@recv{#2}\st@tcont{#3}}
+\newcommand{\selectType}[3][]{{#1\relax}\type@select{#2}{#3}}
+\newcommand{\branchType}[3][]{{#1\relax}\type@branch{#2}{#3}}
+\newcommand{\hosendType}[3][]{{#1\relax}\type@hosend{#2}\st@tcont{#3}}
+\newcommand{\horecvType}[3][]{{#1\relax}\type@horecv{#2}\st@tcont{#3}}
+\newcommand{\recurType }[2]{\type@recur{#1}{#2}}
+\newcommand{\varType   }[1]{\type@var{#1}}
+\newcommand{\finishType}[0]{\type@finish}
+\newcommand{\bottomType}[0]{\type@bottom}
+
+\endinput
+
+% Usage (calculus):
+%
+% Session Request         \request{sharedChannel}{newSession}{continuation}
+% Session Accept          \accept{sharedChannel}{newSession}{continuation}
+% Send                    \send{session}{value}{continuation}
+% Receive                 \recv{session}{value}{continuation}
+% Selection               \select{session}{labelName}{continuation}
+% Branching               \branch{session}{labelName}{continuation}
+% Higher-Order/Session Delegation    \hosend{session}{anotherSession}
+% Higher-Order/Session Receive       \horecv{session}{anotherSession}
+% If-then-else            \cond{ifCondition}{thenProces}{elseProcess}
+% Parallel Composition    \parcomp{parallelCompositionLeft}{parallelCompositionRight}
+% Inaction                \inact
+% Restriction             \restrict{newChannelOrName}{scopeProcess}
+% Recursion               \recur{declarationName}{process}
+% Process Call            \vars{processName}{expressions}{sessions}
+% Declare                 \declare{processName}{expressions}{sessions}{process}
+%
+% Usage (types):
+%
+% Send Type        \sendType[channel]{dataType}{continuationType}
+% Receive Type     \recvType[channel]{dataTyop}{continuationType}
+% Selection Type   \selectType[channel]{labelName}{continuationType}
+% Branching Type   \branchType[channel]{labelName}{continuationType}
+% HO Send Type     \hosendType[channel]{type}{continuationType}
+% HO Receive Type  \hosendType[channel]{type}{continuationType}
+% Recursion Type   \recurType{recurLabelName}{recurBody}
+% Recursion label  \varType{recurLabelName}
+% End Type         \finishType
+% Bottom           \bottomType
