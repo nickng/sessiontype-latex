@@ -78,9 +78,9 @@
 \newcommand{\type@branch@HVK}[2]{\ensuremath{\&\setof{#1_i:\,#2_i}_{i\in\setof{1..n}}}}
 \newcommand{\type@hosend@HVK}[1]{\type@send{#1}}
 \newcommand{\type@horecv@HVK}[1]{\type@recv{#1}}
-\newcommand{\type@recur@HVK }[2]{\ensuremath{\mu\,\type@var{#1}.#2}}
-\newcommand{\type@var@HVK   }[1]{\ensuremath{\mathbf{t}}}
-\newcommand{\type@finish@HVK}[0]{\ensuremath{\keyword{1}}}
+\newcommand{\type@recur@HVK }[2]{\ensuremath{\mu\,\type@recvar{#1}.#2}}
+\newcommand{\type@recvar@HVK}[1]{\ensuremath{\mathbf{t}}}
+\newcommand{\type@end@HVK}[0]{\ensuremath{\keyword{1}}}
 \newcommand{\type@bottom@HVK}[0]{\ensuremath{\perp}}
 
 
@@ -111,9 +111,9 @@
 \newcommand{\type@branch@YV}[2]{\ensuremath{\&\setof{#1_i:\,#2_i}_{i\in\setof{1..n}}}}
 \newcommand{\type@hosend@YV}[1]{\type@send{#1}}
 \newcommand{\type@horecv@YV}[1]{\type@recv{#1}}
-\newcommand{\type@recur@YV }[2]{\ensuremath{\mu\,\type@var{#1}.#2}}
-\newcommand{\type@var@YV   }[1]{\ensuremath{\mathbf{t}}}
-\newcommand{\type@finish@YV}[0]{\ensuremath{\keyword{end}}}
+\newcommand{\type@recur@YV }[2]{\ensuremath{\mu\,\type@recvar{#1}.#2}}
+\newcommand{\type@recvar@YV}[1]{\ensuremath{\mathbf{t}}}
+\newcommand{\type@end@YV}[0]{\ensuremath{\keyword{end}}}
 \newcommand{\type@bottom@YV}[0]{\ensuremath{\perp}}
 
 
@@ -176,15 +176,23 @@
 \newcommand{\type@hosend}[1]{\csname type@hosend@\st@ver\endcsname{#1}}
 \newcommand{\type@horecv}[1]{\csname type@horecv@\st@ver\endcsname{#1}}
 \newcommand{\type@recur }[2]{\csname type@recur@\st@ver\endcsname{#1}{#2}}
-\newcommand{\type@var   }[1]{\csname type@var@\st@ver\endcsname{#1}}
-\newcommand{\type@finish}[0]{\csname type@finish@\st@ver\endcsname}
+\newcommand{\type@recvar}[1]{\csname type@recvar@\st@ver\endcsname{#1}}
+\newcommand{\type@end   }[0]{\csname type@end@\st@ver\endcsname}
 \newcommand{\type@bottom}[0]{\csname type@bottom@\st@ver\endcsname}
+
+\newcommand{\gtype@send  }[4]{\csname gtype@send@\st@ver\endcsname{#1}{#2}{#3}{#4}}
+\newcommand{\gtype@branch}[5]{\csname gtype@branch@\st@ver\endcsname{#1}{#2}{#3}{#4}{#5}}
+\newcommand{\gtype@par   }[2]{\csname gtype@par@\st@ver\endcsname{#1}{#2}}
+\newcommand{\gtype@recur }[2]{\csname gtype@recur@\st@ver\endcsname{#1}{#2}}
+\newcommand{\gtype@recvar}[1]{\csname gtype@recvar@\st@ver\endcsname{#1}}
+\newcommand{\gtype@end   }[0]{\csname gtype@end\st@ver\endcsname}
 
 % Continuation
 \newcommand{\st@icont}[1]{\st@ifcont{\syntax@initcont}{#1}} % If there are continuation, show it (init)
 \newcommand{\st@acont}[1]{\st@ifcont{\syntax@asyncont}{#1}} % If there are continuation, show it (asyn)
 \newcommand{\st@scont}[1]{\st@ifcont{\syntax@synccont}{#1}} % If there are continuation, show it (sync)
 \newcommand{\st@tcont}[1]{\st@ifcont{;}{#1}} % If there are continuation, show it (type)
+\newcommand{\st@gtcont}[1]{\st@ifcont{.}{#1}} % If there are continuation, show it (global type)
 
 
 % Syntax ---------------------------------------------------------------------
@@ -194,29 +202,36 @@
 \newcommand{\send    }[3]{\sessproc@send{#1}{#2}   \st@acont{#3}}
 \newcommand{\recv    }[3]{\sessproc@recv{#1}{#2}   \st@scont{#3}}
 \newcommand{\select  }[3]{\sessproc@select{#1}{#2} \st@acont{#3}}
-\newcommand{\branch  }[3]{\sessproc@branch{#1}{#2}{#3}}          
+\newcommand{\branch  }[3]{\sessproc@branch{#1}{#2}{#3}}
 \newcommand{\hosend  }[3]{\sessproc@hosend{#1}{#2} \st@acont{#3}}
 \newcommand{\horecv  }[3]{\sessproc@horecv{#1}{#2} \st@scont{#3}}
-\newcommand{\cond    }[3]{\sessproc@cond{#1}{#2}{#3}}            
-\newcommand{\parcomp }[2]{\sessproc@parcomp{#1}{#2}}             
-\newcommand{\inact   }[0]{\sessproc@inact}                       
-\newcommand{\restrict}[2]{\sessproc@restrict{#1}(#2)}            
-\newcommand{\recur   }[2]{\sessproc@recur{#1}{#2}}               
-\newcommand{\vars    }[3]{\sessproc@vars{#1}{#2}{#3}}            
-\newcommand{\declare }[4]{\sessproc@declare{#1}{#2}{#3}{#4}}     
+\newcommand{\cond    }[3]{\sessproc@cond{#1}{#2}{#3}}
+\newcommand{\parcomp }[2]{\sessproc@parcomp{#1}{#2}}
+\newcommand{\inact   }[0]{\sessproc@inact}
+\newcommand{\restrict}[2]{\sessproc@restrict{#1}(#2)}
+\newcommand{\recur   }[2]{\sessproc@recur{#1}{#2}}
+\newcommand{\vars    }[3]{\sessproc@vars{#1}{#2}{#3}}
+\newcommand{\declare }[4]{\sessproc@declare{#1}{#2}{#3}{#4}}
 
 % Type -----------------------------------------------------------------------
 
 \newcommand{\sendType  }[3][]{{#1\relax}\type@send{#2}\st@tcont{#3}}
-\newcommand{\recvType  }[3][]{{#1\relax}\type@recv{#2}\st@tcont{#3}}
-\newcommand{\selectType}[3][]{{#1\relax}\type@select{#2}{#3}}
-\newcommand{\branchType}[3][]{{#1\relax}\type@branch{#2}{#3}}
-\newcommand{\hosendType}[3][]{{#1\relax}\type@hosend{#2}\st@tcont{#3}}
-\newcommand{\horecvType}[3][]{{#1\relax}\type@horecv{#2}\st@tcont{#3}}
+\newcommand{\recvType  }[3][]{#1\type@recv{#2}\st@tcont{#3}}
+\newcommand{\selectType}[3][]{#1\type@select{#2}{#3}}
+\newcommand{\branchType}[3][]{#1\type@branch{#2}{#3}}
+\newcommand{\hosendType}[3][]{#1\type@hosend{#2}\st@tcont{#3}}
+\newcommand{\horecvType}[3][]{#1\type@horecv{#2}\st@tcont{#3}}
 \newcommand{\recurType }[2]{\type@recur{#1}{#2}}
-\newcommand{\varType   }[1]{\type@var{#1}}
-\newcommand{\finishType}[0]{\type@finish}
+\newcommand{\recvarType}[1]{\type@recvar{#1}}
+\newcommand{\EndType   }[0]{\type@end}
 \newcommand{\bottomType}[0]{\type@bottom}
+
+\newcommand{\gsendType  }[5]{\gtype@send{#1}{#2}{#3}{#4}\st@gtcont{#5}}
+\newcommand{\gbranchType}[5]{\gtype@branch{#1}{#2}{#3}{#4}{#5}}
+\newcommand{\gparType   }[2]{\gtype@par{#1}{#2}}
+\newcommand{\grecurType }[2]{\gtype@recur{#1}{#2}}
+\newcommand{\grecvarType}[1]{\gtype@recvar{#1}}
+\newcommand{\gendType   }[0]{\gtype@end}
 
 \endinput
 
@@ -247,6 +262,6 @@
 % HO Send Type     \hosendType[channel]{type}{continuationType}
 % HO Receive Type  \hosendType[channel]{type}{continuationType}
 % Recursion Type   \recurType{recurLabelName}{recurBody}
-% Recursion label  \varType{recurLabelName}
-% End Type         \finishType
+% Recursion label  \recvarType{recurLabelName}
+% End Type         \EndType
 % Bottom           \bottomType
