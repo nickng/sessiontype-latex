@@ -31,9 +31,9 @@
     \grmor & \branchType{l}\alpha     & \text{branching}\\
     \grmor & \hosendType{\alpha}\beta & \text{channel output}\\
     \grmor & \horecvType{\alpha}\beta & \text{channel input}\\
-    \grmor & \recurType{t}{\alpha} \grmor \varType t
+    \grmor & \recurType{t}{\alpha} \grmor \recvarType t
                                       & \text{recursion}\\
-    \grmor & \finishType              & \text{inaction}\\
+    \grmor & \EndType                 & \text{inaction}\\
     \grmor & \bottomType              & \text{bottom}\\
 \end{align*}
 
@@ -68,9 +68,9 @@
     \grmor & \branchType{l}\alpha     & \text{branching}\\
     \grmor & \hosendType{\alpha}\beta & \text{channel output}\\
     \grmor & \horecvType{\alpha}\beta & \text{channel input}\\
-    \grmor & \recurType{t}{\alpha} \grmor \varType t
+    \grmor & \recurType{t}{\alpha} \grmor \recvarType t
                                       & \text{recursion}\\
-    \grmor & \finishType              & \text{inaction}\\
+    \grmor & \EndType                 & \text{inaction}\\
     \grmor & \bottomType              & \text{bottom}\\
 \end{align*}
 
@@ -101,14 +101,25 @@
 \end{align*}
 
 \begin{align*}
-  \text{End-point}\ T
+  \text{Value}\ U
+    \grmeq & \VEC{S} \grmor T@\participant{p} \\
+  \text{Sort}\ S
+  \grmeq & \keyword{bool} \grmor \keyword{nat} \grmor \dots \grmor \langle G\rangle\\
+  \text{Global}\ G
+    \grmeq & \gsendType p{p'}{k}UG   & \text{values}\\
+    \grmor & \gbranchType p{p'}{k}lG & \text{branching}\\
+    \grmor & \gparType G{G'}         & \text{branching}\\
+    \grmor & \grecurType tG          & \text{recursive}\\
+    \grmor & \grecvarType t          & \text{variable}\\
+    \grmor & \gendType               & \text{end}\\
+  \text{Local}\ T
     \grmeq & \sendType[k] UT   & \text{output}\\
     \grmor & \recvType[k] UT   & \text{input}\\
     \grmor & \selectType[k] lT & \text{selection}\\
     \grmor & \branchType[k] lT & \text{branching}\\
-    \grmor & \recurType tT \grmor \varType t
+    \grmor & \recurType tT \grmor \recvarType t
                                & \text{recursion}\\
-    \grmor & \finishType       & \text{inaction}\\
+    \grmor & \EndType          & \text{inaction}\\
 \end{align*}
 
 \end{document}
