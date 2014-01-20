@@ -2,7 +2,6 @@
 \ProvidesPackage{sessiontype}[16/01/2014 1.0.0 Session Type typesetting macros]
 
 \RequirePackage{amsmath,amssymb}
-\RequirePackage{ifthen}
 \RequirePackage{xspace}
 
 \ProcessOptions\relax % ------------------------------------------------------
@@ -31,6 +30,10 @@
 \newcommand{\recur   }[2]{\sessproc@recur{#1}{#2}}
 \newcommand{\vars    }[3]{\sessproc@vars{#1}{#2}{#3}}
 \newcommand{\declare }[4]{\sessproc@declare{#1}{#2}{#3}{#4}}
+\newcommand{\seqcomp }[2]{\sessproc@seqcomp{#1}{#2}}
+\newcommand{\outwhile}[3]{\sessproc@outwhile{#1}{#2}{#3}}
+\newcommand{\inwhile}[2]{\sessproc@inwhile{#1}{#2}}
+\newcommand{\inwhilee}[1]{\sessproc@inwhilee{#1}}
 
 % Type -----------------------------------------------------------------------
 
@@ -44,6 +47,9 @@
 \newcommand{\recvarType}[1]{\type@recvar{#1}}
 \newcommand{\EndType   }[0]{\type@end}
 \newcommand{\bottomType}[0]{\type@bottom}
+\newcommand{\iteroutType}[1]{\type@iterout{#1}}
+\newcommand{\iterinType}[1]{\type@iterin{#1}}
+\newcommand{\seqcompType}[2]{\type@seqcomp{#1}{#2}}
 
 % Global Type ----------------------------------------------------------------
 
@@ -76,6 +82,8 @@
 \newcommand{\catchk  }{\keyword{catch}}
 \newcommand{\notk    }{\keyword{not}}
 \newcommand{\inactk  }{\keyword{inact}}
+\newcommand{\inwhilek}{\keyword{inwhile}}
+\newcommand{\outwhilek}{\keyword{outwhile}}
 
 
 % -------------------------------------------------- Configuration and Misc --
@@ -85,13 +93,13 @@
 % Continuation. Usage: \st@ifcont{;}{P} --> ; P (normal)
 %                      \st@ifcont{.}{P} --> .P  (nospace)
 %                      \st@ifcont{;}{}  -->     (no continuation)
-\newcommand{\st@ifcont}[2]{\ifthenelse{\equal{\detokenize{#2}}{}}
-                                      {}
-                                      {\ifthenelse{\equal{#1}{.}}
-                                                  {\ensuremath{#1#2}}
-                                                  {\ensuremath{#1\,#2}}}}
-
-% --------------------------------------------------------- Internal macros --
+\newcommand{\st@ifcont}[2]{%
+  \if\relax\detokenize{#2}\relax
+    {}
+  \else
+    \if#1.\ensuremath{#1#2}\else\ensuremath{#1\,#2}\fi
+  \fi
+}
 
 
 % ---------------------------- HVK ---- ESOP'98 ---- Honda-Vasconcelos-Kubo --
@@ -112,7 +120,7 @@
 \newcommand{\sessproc@declare@HVK }[4]{\ensuremath{\setof{#1_i(#2_i#3_i)\,=\,#4_i}_{i\in\setof{1..n}}}}
 
 \newcommand{\symbol@initcont@HVK }[0]{\ \mathtt{in}} % Continuation after session init
-\newcommand{\symbol@asyncont@HVK }[0]{;}                          % Continuation after asyn
+\newcommand{\symbol@asyncont@HVK }[0]{;}             % Continuation after asyn
 \newcommand{\symbol@synccont@HVK }[0]{\ \mathtt{in}} % Continuation after sync
 
 \newcommand{\type@send@HVK  }[1]{\ensuremath{\downarrow\![#1]}}
@@ -158,6 +166,46 @@
 \newcommand{\type@recvar@YV}[1]{\ensuremath{\mathbf{t}}}
 \newcommand{\type@end@YV}[0]{\ensuremath{\keyword{end}}}
 \newcommand{\type@bottom@YV}[0]{\ensuremath{\perp}}
+
+
+% ------------ NYPHK ---- COORDINATION'11 ---- Ng-Yoshida-Pernet-Hu-Kryftis --
+\newcommand{\sessproc@request@NYPHK }[2]{\ensuremath{\overline{#1}(#2)}}
+\newcommand{\sessproc@accept@NYPHK  }[2]{\ensuremath{#1(#2)}}
+\newcommand{\sessproc@send@NYPHK    }[2]{\ensuremath{\overline{#1}\langle#2\rangle}}
+\newcommand{\sessproc@recv@NYPHK    }[2]{\ensuremath{#1(#2)}}
+\newcommand{\sessproc@select@NYPHK  }[2]{\sessproc@select@YV{#1}{#2}}
+\newcommand{\sessproc@branch@NYPHK  }[3]{\sessproc@branch@YV{#1}{#2}{#3}}
+\newcommand{\sessproc@hosend@NYPHK  }[2]{\sessproc@send@NYPHK{#1}{#2}}
+\newcommand{\sessproc@horecv@NYPHK  }[2]{\sessproc@recv@NYPHK{#1}{#2}}
+\newcommand{\sessproc@cond@NYPHK    }[3]{\sessproc@cond@YV{#1}{#2}{#3}}
+\newcommand{\sessproc@parcomp@NYPHK }[2]{\sessproc@parcomp@YV{#1}{#2}}
+\newcommand{\sessproc@inact@NYPHK   }[0]{\keyword{0}}
+\newcommand{\sessproc@restrict@NYPHK}[1]{\sessproc@restrict@YV{#1}}
+\newcommand{\sessproc@recur@NYPHK   }[2]{\sessproc@recur@YV{#1}{#2}}
+\newcommand{\sessproc@vars@NYPHK    }[3]{\sessproc@vars@YV{#1}{#2}{#3}}
+\newcommand{\sessproc@declare@NYPHK }[4]{\sessproc@declare@YV{#1}{#2}{#3}{#4}}
+\newcommand{\sessproc@seqcomp@NYPHK }[2]{\ensuremath{#1;\ #2}}
+\newcommand{\sessproc@outwhile@NYPHK}[3]{\ensuremath{\langle#1_1\dots#1_n\rangle.\outwhilek(#2)\{#3\}}}
+\newcommand{\sessproc@inwhile@NYPHK }[2]{\ensuremath{\langle#1_1\dots#1_n\rangle.\inwhilek\{#2\}}}
+\newcommand{\sessproc@inwhilee@NYPHK}[1]{\ensuremath{\langle#1_1\dots#1_n\rangle.\inwhilek}}
+
+\newcommand{\symbol@initcont@NYPHK}[0]{.} % Continuation after session init
+\newcommand{\symbol@asyncont@NYPHK}[0]{;} % Continuation after asyn
+\newcommand{\symbol@synccont@NYPHK}[0]{.} % Continuation after sync
+
+\newcommand{\type@send@NYPHK  }[1]{\type@send@YV{#1}}
+\newcommand{\type@recv@NYPHK  }[1]{\type@recv@YV{#1}}
+\newcommand{\type@select@NYPHK}[2]{\type@select@YV{#1}{#2}}
+\newcommand{\type@branch@NYPHK}[2]{\type@branch@YV{#1}{#2}}
+\newcommand{\type@hosend@NYPHK}[1]{\type@hosend@YV{#1}}
+\newcommand{\type@horecv@NYPHK}[1]{\type@horecv@YV{#1}}
+\newcommand{\type@recur@NYPHK }[2]{\type@recur@YV{#1}{#2}}
+\newcommand{\type@recvar@NYPHK}[1]{\type@recvar@YV{#1}}
+\newcommand{\type@end@NYPHK   }[0]{\type@end@YV}
+\newcommand{\type@bottom@NYPHK}[0]{\type@bottom@YV}
+\newcommand{\type@iterout@NYPHK}[1]{\ensuremath{![#1]^*}}
+\newcommand{\type@iterin@NYPHK}[1]{\ensuremath{?[#1]^*}}
+\newcommand{\type@seqcomp@NYPHK}[2]{\ensuremath{#1;\,#2}}
 
 
 % ----------------------------- HYC ---- POPL'08 ---- Honda-Yoshida-Carbone --
@@ -311,11 +359,43 @@
   \fi
 }
 
-\newcommand{\sessproc@declare}[4]{
+\newcommand{\sessproc@declare}[4]{%
   \ifcsname sessproc@declare@\st@ver\endcsname
     \csname sessproc@declare@\st@ver\endcsname{#1}{#2}{#3}{#4}
   \else
     \PackageWarning{sessiontype}{sessproc@declare not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\sessproc@seqcomp}[2]{%
+  \ifcsname sessproc@seqcomp@\st@ver\endcsname
+    \csname sessproc@seqcomp@\st@ver\endcsname{#1}{#2}
+  \else
+    \PackageWarning{sessiontype}{sessproc@seqcomp not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\sessproc@outwhile}[3]{%
+  \ifcsname sessproc@outwhile@\st@ver\endcsname
+    \csname sessproc@outwhile@\st@ver\endcsname{#1}{#2}{#3}
+  \else
+    \PackageWarning{sessiontype}{sessproc@outwhile not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\sessproc@inwhile}[2]{%
+  \ifcsname sessproc@inwhile@\st@ver\endcsname
+    \csname sessproc@inwhile@\st@ver\endcsname{#1}{#2}
+  \else
+    \PackageWarning{sessiontype}{sessproc@inwhile not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\sessproc@inwhilee}[1]{%
+  \ifcsname sessproc@inwhilee@\st@ver\endcsname
+    \csname sessproc@inwhilee@\st@ver\endcsname{#1}
+  \else
+    \PackageWarning{sessiontype}{sessproc@inwhilee not defined for \st@ver}
   \fi
 }
 
@@ -355,7 +435,7 @@
   \ifcsname type@recv@\st@ver\endcsname
     \csname type@recv@\st@ver\endcsname{#1}
   \else
-    \PackageWraning{sessiontype}{type@recv not defined for \st@ver}
+    \PackageWarning{sessiontype}{type@recv not defined for \st@ver}
   \fi
 }
 
@@ -420,6 +500,30 @@
     \csname type@bottom@\st@ver\endcsname
   \else
     \PackageWarning{sessiontype}{type@bottom not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\type@iterout}[1]{%
+  \ifcsname type@iterout@\st@ver\endcsname
+    \csname type@iterout@\st@ver\endcsname{#1}
+  \else
+    \PackageWarning{sessiontype}{type@iterout not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\type@iterin}[1]{%
+  \ifcsname type@iterin@\st@ver\endcsname
+    \csname type@iterin@\st@ver\endcsname{#1}
+  \else
+    \PackageWarning{sessiontype}{type@iterin not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\type@seqcomp}[2]{%
+  \ifcsname type@seqcomp@\st@ver\endcsname
+    \csname type@seqcomp@\st@ver\endcsname{#1}{#2}
+  \else
+    \PackageWarning{sessiontype}{type@seqcomp not defined for \st@ver}
   \fi
 }
 

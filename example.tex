@@ -122,4 +122,73 @@
     \grmor & \EndType          & \text{inaction}\\
 \end{align*}
 
+\section{Ng-Yoshida-Pernet-Hu-Kryftis}
+
+\usesessiontype{NYPHK}
+\begin{align*}
+  P \grmeq & \inact                       & \text{inaction}\\
+    \grmor & T                            & \text{prefixed}\\
+    \grmor & \seqcomp PQ                  & \text{sequence}\\
+    \grmor & \parcomp PQ                  & \text{parallel}\\
+    \grmor & \restrict uP                 & \text{hiding}\\
+  T \grmeq & \request akP                 & \text{request}\\
+    \grmor & \accept akP                  & \text{accept}\\
+    \grmor & \send{k}{e}{}                & \text{sending}\\
+    \grmor & \recv kxP                    & \text{reception}\\
+    \grmor & \hosend k{k'}{}              & \text{sending}\\
+    \grmor & \horecv k{k'}P               & \text{reception}\\
+    \grmor & \vars Xek                    & \text{variables}\\
+    \grmor & \recur DP                    & \text{recursion}\\
+    \grmor & \select kl                   & \text{selection}\\
+    \grmor & \branch klP                  & \text{branch}\\
+    \grmor & \cond ePQ                    & \text{conditional}\\
+    \grmor & \inwhile kQ                  & \text{inwhile}\\
+    \grmor & \outwhile keP                & \text{outwhile}\\
+    \grmor & k\dagger[b]                  & \text{message}\\
+  D \grmeq & \declare XxkP                & \text{declaration}\\
+  v \grmeq & a, b, x, y                   & \text{shared names}\\
+    \grmor & \truek, \falsek              & \text{boolean}\\
+    \grmor & n                            & \text{integer}\\
+  e \grmeq & v \grmor                     & \text{value}\\
+    \grmor & e + e'                       & \text{sum}\\
+    \grmor & \notk(e)                     & \text{not}\\
+    \grmor & \inwhilee k                  & \text{inwhile}\\
+    \grmor & \dots                                        \\
+\end{align*}
+
+\begin{align*}
+  \text{Evaluation context}\ E
+    \grmeq & []                        & \text{}\\
+    \grmor & \seqcomp EP               & \text{sequential composition}\\
+    \grmor & \parcomp EP               & \text{parallel composition}\\
+    \grmor & \restrict uE              & \text{hiding}\\
+    \grmor & \recur DE                 & \text{recursion}\\
+    \grmor & \cond EPQ                 & \text{conditional}\\
+    \grmor & \outwhile kEP             & \text{outwhile}\\
+    \grmor & E + e \grmor \dots        & \text{expressions}\\
+\end{align*}
+\begin{align*}
+  \text{Sort}\ S
+    \grmeq & \keyword{nat} \grmor \keyword{bool}
+    \grmor \langle\alpha,\overline\alpha\rangle & \\
+  \text{Partial session}\ \tau
+    \grmeq & \epsilon                 & \text{empty}\\
+    \grmor & \seqcompType \tau\tau    & \text{sequential composition}\\
+    \grmor & \sendType S{}            & \text{output}\\
+    \grmor & \recvType S{}            & \text{input}\\
+    \grmor & \selectType{l}{\tau}     & \text{selection}\\
+    \grmor & \branchType{l}\tau       & \text{branching}\\
+    \grmor & \hosendType{\alpha}{}    & \text{channel output}\\
+    \grmor & \horecvType{\alpha}{}    & \text{channel input}\\
+    \grmor & \recurType{x}{\tau} \grmor \recvarType x
+                                      & \text{recursion}\\
+  \text{Completed session}\ \alpha
+    \grmeq & \tau.\EndType            & \text{inaction}\\
+    \grmor & \bottomType              & \text{bottom}\\
+  \text{Runtime session}\ \beta
+    \grmeq & \alpha                   & \text{completed session}\\
+    \grmor & \alpha^\dagger           & \text{unconsumed message}\\
+    \grmor & \dagger                  & \text{message}\\
+\end{align*}
+
 \end{document}
