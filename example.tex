@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage{amssymb}
 \usepackage{sessiontype}
 
 \begin{document}
@@ -106,8 +107,8 @@
   \text{Sort}\ S
   \grmeq & \keyword{bool} \grmor \keyword{nat} \grmor \dots \grmor \langle G\rangle\\
   \text{Global}\ G
-    \grmeq & \gsendType p{p'}{k}UG   & \text{values}\\
-    \grmor & \gbranchType p{p'}{k}lG & \text{branching}\\
+    \grmeq & \gsendType[k] p{p'}UG   & \text{values}\\
+    \grmor & \gbranchType[k] p{p'}lG & \text{branching}\\
     \grmor & \gparType G{G'}         & \text{branching}\\
     \grmor & \grecurType tG          & \text{recursive}\\
     \grmor & \grecvarType t          & \text{variable}\\
@@ -189,6 +190,71 @@
     \grmeq & \alpha                   & \text{completed session}\\
     \grmor & \alpha^\dagger           & \text{unconsumed message}\\
     \grmor & \dagger                  & \text{message}\\
+\end{align*}
+
+\section{Deni\'elou-Yoshida-Bejleri-Hu}
+\usesessiontype{DYBH}
+
+\begin{align*}
+  c \grmeq & y \grmor s[\participant{p}]   & \text{Channels} \\
+  u \grmeq & x \grmor a                    & \text{Identifiers}\\
+  v \grmeq & a \grmor \text{n}             & \text{Values}\\
+  e \grmeq & \mathtt{i}
+    \grmor v
+    \grmor x
+    \grmor s[\participant{p}]
+    \grmor e\,\keyword{op}\,e'             & \text{Expressions}\\
+  \hat{\mathtt{p}}, \hat{\mathtt{q}}
+    \grmeq & \hat{\mathtt{p}}[\text{n}]
+    \grmor \mathcal{P}                     & \text{Principal values}\\
+  m \grmeq & (\hat{\mathtt{q}},\hat{\mathtt{p}},v)
+    \grmor (\hat{\mathtt{q}},\hat{\mathtt{p}},s[\hat{\mathtt{p}}])
+    \grmor (\hat{\mathtt{q}},\hat{\mathtt{p}},l)
+                                           & \text{Messages in transit}\\
+  h \grmeq & \epsilon \grmor m\cdot h       & \text{Queue types}\\
+\end{align*}
+\begin{align*}
+  P \grmeq &               & \text{Processes}\\
+    \grmor & \init uyP     & \text{Init}\\
+    \grmor & \accept uyP   & \text{Accept}\\
+    \grmor & \request as{} & \text{Request}\\
+    \grmor & \send ceP     & \text{Value sending}\\
+    \grmor & \recv cxP     & \text{Value reception}\\
+    \grmor & \select clP   & \text{Selection}\\
+    \grmor & \branch clP   & \text{Branching}\\
+    \grmor & \restrict aP  & \text{Shared channel restriction}\\
+    \grmor & \recur XP     & \text{Recursion}\\
+    \grmor & \inact        & \text{Inaction}\\
+    \grmor & \parcomp PQ   & \text{Parallel}\\
+    \grmor & \primrec PiXQ & \text{Primitive recursion}\\
+    \grmor & \vars X{}{}   & \text{Process variable}\\
+    \grmor & \app Pi       & \text{Application}\\
+    \grmor & \restrict sP  & \text{Session restriction}\\
+    \grmor & s\colon h     & \text{Queues}\\
+\end{align*}
+
+\begin{align*}
+  G \grmeq & & \text{Global types}\\
+  \grmor & \gsendType p{p'}UG    & \text{Message}\\
+  \grmor & \gbranchType p{p'}lG  & \text{Branching}\\
+  \grmor & \grecurType xG        & \text{Recursion}\\
+  \grmor & \gprimrecType GiIx{G'}& \text{Primitive recursion}\\
+  \grmor & \grecvarType x        & \text{Type variable}\\
+  \grmor & \gappType Gi          & \text{Application}\\
+  \grmor & \gendType             & \text{Null}\\
+\end{align*}
+
+\begin{align*}
+  T \grmeq & & \text{End-point types}\\
+  \grmor & \sendType UT          & \text{Output}\\
+  \grmor & \recvType UT          & \text{Input}\\
+  \grmor & \selectType lT        & \text{Selection}\\
+  \grmor & \branchType lt        & \text{Branching}\\
+  \grmor & \recurType xT         & \text{Recursion}\\
+  \grmor & \primrecType TiIx{T'} & \text{Primitive recursion}\\
+  \grmor & \recvarType x         & \text{Type variable}\\
+  \grmor & \appType Ti           & \text{Application}\\
+  \grmor & \EndType              & \text{Null}\\
 \end{align*}
 
 \end{document}

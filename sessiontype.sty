@@ -34,6 +34,9 @@
 \newcommand{\outwhile}[3]{\sessproc@outwhile{#1}{#2}{#3}}
 \newcommand{\inwhile}[2]{\sessproc@inwhile{#1}{#2}}
 \newcommand{\inwhilee}[1]{\sessproc@inwhilee{#1}}
+\newcommand{\init}[3]{\sessproc@init{#1}{#2}\st@icont{#3}}
+\newcommand{\primrec}[4]{\sessproc@primrec{#1}{#2}{#3}{#4}}
+\newcommand{\app}[2]{\sessproc@app{#1}{#2}}
 
 % Type -----------------------------------------------------------------------
 
@@ -50,15 +53,19 @@
 \newcommand{\iteroutType}[1]{\type@iterout{#1}}
 \newcommand{\iterinType}[1]{\type@iterin{#1}}
 \newcommand{\seqcompType}[2]{\type@seqcomp{#1}{#2}}
+\newcommand{\primrecType}[5]{\type@primrec{#1}{#2}{#3}{#4}{#5}}
+\newcommand{\appType}[2]{\type@app{#1}{#2}}
 
 % Global Type ----------------------------------------------------------------
 
-\newcommand{\gsendType}[5]{\gtype@send{#1}{#2}{#3}{#4}\st@gtcont{#5}}
-\newcommand{\gbranchType}[5]{\gtype@branch{#1}{#2}{#3}{#4}{#5}}
+\newcommand{\gsendType}[5][]{\gtype@send[#1]{#2}{#3}{#4}\st@gtcont{#5}}
+\newcommand{\gbranchType}[5][]{\gtype@branch[#1]{#2}{#3}{#4}{#5}}
 \newcommand{\gparType}[2]{\gtype@par{#1}{#2}}
 \newcommand{\grecurType}[2]{\gtype@recur{#1}{#2}}
 \newcommand{\grecvarType}[1]{\gtype@recvar{#1}}
 \newcommand{\gendType}[0]{\gtype@end}
+\newcommand{\gprimrecType}[5]{\gtype@primrec{#1}{#2}{#3}{#4}{#5}}
+\newcommand{\gappType}[2]{\gtype@app{#1}{#2}}
 
 % Auxiliary ------------------------------------------------------------------
 
@@ -237,12 +244,53 @@
 \newcommand{\type@recvar@HYC}[1]{\ensuremath{\mathbf{#1}}}
 \newcommand{\type@end@HYC}[0]{\ensuremath{\keyword{end}}}
 
-\newcommand{\gtype@send@HYC}[4]{\ensuremath{#1\to #2\colon#3\langle#4\rangle}}
-\newcommand{\gtype@branch@HYC}[5]{\ensuremath{#1\to #2\colon#3\setof{#4_j\colon#5_j}_{j\in J}}}
+\newcommand{\gtype@send@HYC}[4][]{\ensuremath{#2\to #3\colon#1\langle#4\rangle}}
+\newcommand{\gtype@branch@HYC}[5][]{\ensuremath{#2\to #3\colon#1\setof{#4_j\colon#5_j}_{j\in J}}}
 \newcommand{\gtype@par@HYC}[2]{\ensuremath{#1,#2}}
 \newcommand{\gtype@recur@HYC}[2]{\type@recur@HYC{#1}{#2}}
 \newcommand{\gtype@recvar@HYC}[1]{\type@recvar@HYC{#1}}
 \newcommand{\gtype@end@HYC}[0]{\type@end@HYC}
+
+
+% ---------------------------- DYBH ---- LMCS ---- Denielou-Yoshida-Bejleri-Hu
+\newcommand{\sessproc@init@DYBH}[2]{\ensuremath{\overline{#1}[\symbol@principal@DYBH_0,..,\symbol@principal@DYBH_n] (#2)}}
+\newcommand{\sessproc@request@DYBH}[2]{\ensuremath{\overline{#1}[\hat{\symbol@principal@DYBH}]\colon#2}}
+\newcommand{\sessproc@accept@DYBH}[2]{\ensuremath{#1[\symbol@principal@DYBH] (#2)}}
+\newcommand{\sessproc@send@DYBH}[2]{\ensuremath{#1!\langle\symbol@principal@DYBH,#2\rangle}}
+\newcommand{\sessproc@recv@DYBH}[2]{\ensuremath{#1?(\symbol@principal@DYBH,#2)}}
+\newcommand{\sessproc@select@DYBH}[2]{\ensuremath{#1\oplus\langle\symbol@principal@DYBH,#2\rangle}}
+\newcommand{\sessproc@branch@DYBH}[3]{\ensuremath{#1\,\&\,(\symbol@principal@DYBH,\setof{#2_k\colon\,#3_k}_{k\in K})}}
+\newcommand{\sessproc@restrict@DYBH}[1]{\ensuremath{({\boldsymbol\nu}\,#1)}}
+\newcommand{\sessproc@recur@DYBH}[2]{\ensuremath{\mu#1.#2}}
+\newcommand{\sessproc@inact@DYBH}[0]{\ensuremath{\mathbf{0}}}
+\newcommand{\sessproc@parcomp@DYBH}[2]{\ensuremath{#1 \mid #2}}
+\newcommand{\sessproc@primrec@DYBH}[4]{\ensuremath{\mathbf{R}\,#1\,\lambda#2.\lambda\mathbf{#3}.#4}}
+\newcommand{\sessproc@vars@DYBH}[3]{\ensuremath{#1}}
+\newcommand{\sessproc@app@DYBH}[2]{\ensuremath{(#1\,\mathtt{#2})}}
+
+\newcommand{\symbol@principal@DYBH}{\participant{p}} % Default principal
+
+\newcommand{\symbol@initcont@DYBH}[0]{.} % Continuation after session init
+\newcommand{\symbol@asyncont@DYBH}[0]{;} % Continuation after async
+\newcommand{\symbol@synccont@DYBH}[0]{;} % Continuation after sync
+
+\newcommand{\type@send@DYBH}[1]{\ensuremath{!\langle\symbol@principal@DYBH,#1\rangle}}
+\newcommand{\type@recv@DYBH}[1]{\ensuremath{?\langle\symbol@principal@DYBH,#1\rangle}}
+\newcommand{\type@select@DYBH}[2]{\ensuremath{\oplus\langle\symbol@principal@DYBH,\setof{#1_i\colon#2_i}_{i\in\setof{1..n}}\rangle}}
+\newcommand{\type@branch@DYBH}[2]{\ensuremath{\,\&\,\langle\symbol@principal@DYBH,\setof{#1_i\colon#2_i}_{i\in\setof{1..n}}\rangle}}
+\newcommand{\type@recur@DYBH}[2]{\ensuremath{\mu\type@recvar{#1}.#2}}
+\newcommand{\type@primrec@DYBH}[5]{\ensuremath{\mathbf{R}\,#1\,\lambda#2\colon#3.\lambda\mathbf{#4}.#5}}
+\newcommand{\type@recvar@DYBH}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\type@app@DYBH}[2]{\ensuremath{(#1\,\mathtt{#2})}}
+\newcommand{\type@end@DYBH}[0]{\ensuremath{\keyword{end}}}
+
+\newcommand{\gtype@send@DYBH}[4][]{\ensuremath{#2\to#3\colon\langle#4\rangle}}
+\newcommand{\gtype@branch@DYBH}[5][]{\ensuremath{#2\to#3\colon\setof{#4_k\colon#5_k}_{k\in K}}}
+\newcommand{\gtype@recur@DYBH}[2]{\type@recur@DYBH{#1}{#2}}
+\newcommand{\gtype@primrec@DYBH}[5]{\type@primrec@DYBH{#1}{#2}{#3}{#4}{#5}}
+\newcommand{\gtype@recvar@DYBH}[1]{\type@recvar@DYBH{#1}}
+\newcommand{\gtype@app@DYBH}[2]{\type@app@DYBH{#1}{#2}}
+\newcommand{\gtype@end@DYBH}[0]{\type@end@DYBH}
 
 
 % --------------------------------------------------------- Version picking --
@@ -399,6 +447,30 @@
   \fi
 }
 
+\newcommand{\sessproc@init}[2]{%
+  \ifcsname sessproc@init@\st@ver\endcsname
+    \csname sessproc@init@\st@ver\endcsname{#1}{#2}
+  \else
+    \PackageWarning{sessiontype}{sessproc@init not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\sessproc@primrec}[4]{%
+  \ifcsname sessproc@primrec@\st@ver\endcsname
+    \csname sessproc@primrec@\st@ver\endcsname{#1}{#2}{#3}{#4}
+  \else
+    \PackageWarning{sessiontype}{sessproc@primrec not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\sessproc@app}[2]{%
+  \ifcsname sessproc@app@\st@ver\endcsname
+    \csname sessproc@app@\st@ver\endcsname{#1}{#2}
+  \else
+    \PackageWarning{sessiontype}{sessproc@app not defined for \st@ver}
+  \fi
+}
+
 \newcommand{\symbol@initcont}[0]{% Init-continuation
   \ifcsname symbol@initcont@\st@ver\endcsname
     \csname symbol@initcont@\st@ver\endcsname
@@ -527,17 +599,33 @@
   \fi
 }
 
-\newcommand{\gtype@send}[4]{%
+\newcommand{\type@app}[2]{%
+  \ifcsname type@app@\st@ver\endcsname
+    \csname type@app@\st@ver\endcsname{#1}{#2}
+  \else
+    \PackageWarning{sessiontype}{type@app not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\type@primrec}[5]{%
+  \ifcsname type@primrec@\st@ver\endcsname
+    \csname type@primrec@\st@ver\endcsname{#1}{#2}{#3}{#4}{#5}
+  \else
+    \PackageWarning{sessiontype}{type@primrec not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\gtype@send}[4][]{%
   \ifcsname gtype@send@\st@ver\endcsname
-    \csname gtype@send@\st@ver\endcsname{#1}{#2}{#3}{#4}
+    \csname gtype@send@\st@ver\endcsname[#1]{#2}{#3}{#4}
   \else
     \PackageWarning{sessiontype}{gtype@send not defined for \st@ver}
   \fi
 }
 
-\newcommand{\gtype@branch}[5]{%
+\newcommand{\gtype@branch}[5][]{%
   \ifcsname gtype@branch@\st@ver\endcsname
-    \csname gtype@branch@\st@ver\endcsname{#1}{#2}{#3}{#4}{#5}
+    \csname gtype@branch@\st@ver\endcsname[#1]{#2}{#3}{#4}{#5}
   \else
     \PackageWarning{sessiontype}{gtype@branch not defined for \st@ver}
   \fi
@@ -572,6 +660,22 @@
     \csname gtype@end@\st@ver\endcsname
   \else
     \PackageWarning{sessiontype}{gtype@end not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\gtype@primrec}[5]{%
+  \ifcsname gtype@primrec@\st@ver\endcsname
+    \csname gtype@primrec@\st@ver\endcsname{#1}{#2}{#3}{#4}{#5}
+  \else
+    \PackageWarning{sessiontype}{gtype@primrec not defined for \st@ver}
+  \fi
+}
+
+\newcommand{\gtype@app}[2]{%
+  \ifcsname gtype@app@\st@ver\endcsname
+    \csname gtype@app@\st@ver\endcsname{#1}{#2}
+  \else
+    \PackageWarning{sessiontype}{gtype@app not defined for \st@ver}
   \fi
 }
 
