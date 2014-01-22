@@ -97,7 +97,7 @@
   \if\relax\detokenize{#2}\relax
     {}
   \else
-    \if#1.\ensuremath{#1#2}\else\ensuremath{#1\,#2}\fi
+    \ensuremath{#1\xspace#2}
   \fi
 }
 
@@ -119,9 +119,9 @@
 \newcommand{\sessproc@vars@HVK    }[3]{\ensuremath{#1[#2#3]}}
 \newcommand{\sessproc@declare@HVK }[4]{\ensuremath{\setof{#1_i(#2_i#3_i)\,=\,#4_i}_{i\in\setof{1..n}}}}
 
-\newcommand{\symbol@initcont@HVK }[0]{\ \mathtt{in}} % Continuation after session init
-\newcommand{\symbol@asyncont@HVK }[0]{;}             % Continuation after asyn
-\newcommand{\symbol@synccont@HVK }[0]{\ \mathtt{in}} % Continuation after sync
+\newcommand{\symbol@initcont@HVK}[0]{\,\mathtt{in}\,} % Continuation after session init
+\newcommand{\symbol@asyncont@HVK}[0]{;}             % Continuation after asyn
+\newcommand{\symbol@synccont@HVK}[0]{\,\mathtt{in}\,} % Continuation after sync
 
 \newcommand{\type@send@HVK  }[1]{\ensuremath{\downarrow\![#1]}}
 \newcommand{\type@recv@HVK  }[1]{\ensuremath{\uparrow\![#1]}}
