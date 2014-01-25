@@ -143,8 +143,8 @@
     \grmor & \select kl                   & \text{selection}\\
     \grmor & \branch klP                  & \text{branch}\\
     \grmor & \cond ePQ                    & \text{conditional}\\
-    \grmor & \inwhile kQ                  & \text{inwhile}\\
-    \grmor & \outwhile keP                & \text{outwhile}\\
+    \grmor & \inwhile {\channelsFromTo k1n}Q & \text{inwhile}\\
+    \grmor & \outwhile{\channelsFromTo k1n}eP& \text{outwhile}\\
     \grmor & k\dagger[b]                  & \text{message}\\
   D \grmeq & \declare XxkP                & \text{declaration}\\
   v \grmeq & a, b, x, y                   & \text{shared names}\\
@@ -153,8 +153,8 @@
   e \grmeq & v \grmor                     & \text{value}\\
     \grmor & e + e'                       & \text{sum}\\
     \grmor & \notk(e)                     & \text{not}\\
-    \grmor & \inwhilee k                  & \text{inwhile}\\
-    \grmor & \dots                                        \\
+    \grmor & \inwhilee {\channelsFromTo k1n} & \text{inwhile}\\
+    \grmor & \dots                        \\
 \end{align*}
 
 \begin{align*}
@@ -235,26 +235,26 @@
 
 \begin{align*}
   G \grmeq & & \text{Global types}\\
-  \grmor & \gsendType p{p'}UG    & \text{Message}\\
-  \grmor & \gbranchType p{p'}lG  & \text{Branching}\\
-  \grmor & \grecurType xG        & \text{Recursion}\\
-  \grmor & \gprimrecType GiIx{G'}& \text{Primitive recursion}\\
-  \grmor & \grecvarType x        & \text{Type variable}\\
-  \grmor & \gappType Gi          & \text{Application}\\
-  \grmor & \gendType             & \text{Null}\\
+    \grmor & \gsendType p{p'}UG    & \text{Message}\\
+    \grmor & \gbranchType p{p'}lG  & \text{Branching}\\
+    \grmor & \grecurType xG        & \text{Recursion}\\
+    \grmor & \gprimrecType GiIx{G'}& \text{Primitive recursion}\\
+    \grmor & \grecvarType x        & \text{Type variable}\\
+    \grmor & \gappType Gi          & \text{Application}\\
+    \grmor & \gendType             & \text{Null}\\
 \end{align*}
 
 \begin{align*}
   T \grmeq & & \text{End-point types}\\
-  \grmor & \sendType UT          & \text{Output}\\
-  \grmor & \recvType UT          & \text{Input}\\
-  \grmor & \selectType lT        & \text{Selection}\\
-  \grmor & \branchType lt        & \text{Branching}\\
-  \grmor & \recurType xT         & \text{Recursion}\\
-  \grmor & \primrecType TiIx{T'} & \text{Primitive recursion}\\
-  \grmor & \recvarType x         & \text{Type variable}\\
-  \grmor & \appType Ti           & \text{Application}\\
-  \grmor & \EndType              & \text{Null}\\
+    \grmor & \sendType UT          & \text{Output}\\
+    \grmor & \recvType UT          & \text{Input}\\
+    \grmor & \selectType lT        & \text{Selection}\\
+    \grmor & \branchType lt        & \text{Branching}\\
+    \grmor & \recurType xT         & \text{Recursion}\\
+    \grmor & \primrecType TiIx{T'} & \text{Primitive recursion}\\
+    \grmor & \recvarType x         & \text{Type variable}\\
+    \grmor & \appType Ti           & \text{Application}\\
+    \grmor & \EndType              & \text{Null}\\
 \end{align*}
 
 \end{document}

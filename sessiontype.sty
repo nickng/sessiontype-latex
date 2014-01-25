@@ -92,6 +92,8 @@
 \newcommand{\inwhilek}{\keyword{inwhile}}
 \newcommand{\outwhilek}{\keyword{outwhile}}
 
+\newcommand{\channelsFromTo}[3]{\@channelsFromTo{#1}{#2}{#3}}
+
 
 % -------------------------------------------------- Configuration and Misc --
 
@@ -192,13 +194,15 @@
 \newcommand{\sessproc@vars@NYPHK}[3]{\sessproc@vars@YV{#1}{#2}{#3}}
 \newcommand{\sessproc@declare@NYPHK}[4]{\sessproc@declare@YV{#1}{#2}{#3}{#4}}
 \newcommand{\sessproc@seqcomp@NYPHK}[2]{\ensuremath{#1;\ #2}}
-\newcommand{\sessproc@outwhile@NYPHK}[3]{\ensuremath{\langle#1_1\dots#1_n\rangle.\outwhilek(#2)\{#3\}}}
-\newcommand{\sessproc@inwhile@NYPHK}[2]{\ensuremath{\langle#1_1\dots#1_n\rangle.\inwhilek\{#2\}}}
-\newcommand{\sessproc@inwhilee@NYPHK}[1]{\ensuremath{\langle#1_1\dots#1_n\rangle.\inwhilek}}
+\newcommand{\sessproc@outwhile@NYPHK}[3]{\ensuremath{\langle#1\rangle.\outwhilek(#2)\{#3\}}}
+\newcommand{\sessproc@inwhile@NYPHK}[2]{\ensuremath{\langle#1\rangle.\inwhilek\{#2\}}}
+\newcommand{\sessproc@inwhilee@NYPHK}[1]{\ensuremath{\langle#1\rangle.\inwhilek}}
 
 \newcommand{\symbol@initcont@NYPHK}[0]{.} % Continuation after session init
 \newcommand{\symbol@asyncont@NYPHK}[0]{;} % Continuation after asyn
 \newcommand{\symbol@synccont@NYPHK}[0]{.} % Continuation after sync
+
+\newcommand{\aux@channels@NYPHK}[3]{\ensuremath{{#1}_{#2}\dots{#1}_{#3}}}
 
 \newcommand{\type@send@NYPHK}[1]{\type@send@YV{#1}}
 \newcommand{\type@recv@NYPHK}[1]{\type@recv@YV{#1}}
@@ -266,7 +270,7 @@
 \newcommand{\sessproc@parcomp@DYBH}[2]{\ensuremath{#1 \mid #2}}
 \newcommand{\sessproc@primrec@DYBH}[4]{\ensuremath{\mathbf{R}\,#1\,\lambda#2.\lambda\mathbf{#3}.#4}}
 \newcommand{\sessproc@vars@DYBH}[3]{\ensuremath{#1}}
-\newcommand{\sessproc@app@DYBH}[2]{\ensuremath{(#1\,\mathtt{#2})}}
+\newcommand{\sessproc@app@DYBH}[2]{\ensuremath{#1\;\mathtt{#2}}}
 
 \newcommand{\symbol@principal@DYBH}{\participant{p}} % Default principal
 
@@ -281,7 +285,7 @@
 \newcommand{\type@recur@DYBH}[2]{\ensuremath{\mu\type@recvar{#1}.#2}}
 \newcommand{\type@primrec@DYBH}[5]{\ensuremath{\mathbf{R}\,#1\,\lambda#2\colon#3.\lambda\mathbf{#4}.#5}}
 \newcommand{\type@recvar@DYBH}[1]{\ensuremath{\mathbf{#1}}}
-\newcommand{\type@app@DYBH}[2]{\ensuremath{(#1\,\mathtt{#2})}}
+\newcommand{\type@app@DYBH}[2]{\ensuremath{#1\;\mathtt{#2}}}
 \newcommand{\type@end@DYBH}[0]{\ensuremath{\keyword{end}}}
 
 \newcommand{\gtype@send@DYBH}[4][]{\ensuremath{#2\to#3\colon\langle#4\rangle}}
@@ -492,6 +496,14 @@
     \csname symbol@synccont@\st@ver\endcsname
   \else
   \PackageWarning{sessiontype}{symbol@synccont not defined for \st@ver (Synchronous continuation)}
+  \fi
+}
+
+\newcommand{\@channelsFromTo}[3]{
+  \ifcsname aux@channels@\st@ver\endcsname
+    \csname aux@channels@\st@ver\endcsname{#1}{#2}{#3}
+  \else
+    \PackageWarning{sessiontype}{aux@channels not defined for \st@ver}
   \fi
 }
 
